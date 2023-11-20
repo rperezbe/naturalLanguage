@@ -1,0 +1,7 @@
+{
+    "test": "true",
+    "gID": "1aBc",
+    "ssml": "La asignatura de Conversational AI, creada y dictada por Ismael Chaile, mola. Los alumnos son muy majos y están entusiasmados en aprender.
+Parece que todos somos bastante frikis.",
+    "action": "json"
+}

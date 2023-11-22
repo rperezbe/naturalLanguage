@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentiment Analysis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Natural language Demo</h1>
+    <script>
+        // Simula un objeto JSON variable
+        const jsonData = {
+            "Sentiment": {
+                "sentences": [
+                    {
+                        "text": {
+                            "content": "La asignatura de Conversational AI, creada y dictada por Ismael Chaile, mola.",
+                            "beginOffset": -1
+                        },
+                        "sentiment": {
+                            "magnitude": 0.9750000238418579,
+                            "score": 0.9279999732971191
+                        }
+                    },
+                    {
+                        "text": {
+                            "content": "Los alumnos son muy majos y están entusiasmados en aprender.",
+                            "beginOffset": -1
+                        },
+                        "sentiment": {
+                            "magnitude": 0.9739999771118164,
+                            "score": 0.902999997138977
+                        }
+                    },
+                    {
+                        "text": {
+                            "content": "Parece que todos somos bastante frikis.",
+                            "beginOffset": -1
+                        },
+                        "sentiment": {
+                            "magnitude": 0.44999998807907104,
+                            "score": 0.30399999022483826
+                        }
+                    }
+                ],
+                "documentSentiment": {
+                    "magnitude": 2.3980000019073486,
+                    "score": 0.7110000252723694
+                },
+                "languageCode": "es",
+                "languageSupported": true
+            },
+            "Entities": {
+                "entities": [
+                    {
+                        "mentions": [
+                            {
+                                "text": {
+                                    "content": "Conversational AI",
+                                    "beginOffset": -1
+                                },
+                                "type": "PROPER",
+                                "sentiment": null,
+                                "probability": 0.6990000009536743
+                            }
+                        ],
+                        "metadata": {},
+                        "name": "Conversational AI",
+                        "type": "OTHER",
+                        "sentiment": null
+                    },
+                    {
+                        "mentions": [
+                            {
+                                "text": {
+                                    "content": "Ismael Chaile",
+                                    "beginOffset": -1
+                                },
+                                "type": "PROPER",
+                                "sentiment": null,
+                                "probability": 0.9010000228881836
+                            }
+                        ],
+                        "metadata": {},
+                        "name": "Ismael Chaile",
+                        "type": "PERSON",
+                        "sentiment": null
+                    },
+                    {
+                        "mentions": [
+                            {
+                                "text": {
+                                    "content": "alumnos",
+                                    "beginOffset": -1
+                                },
+                                "type": "COMMON",
+                                "sentiment": null,
+                                "probability": 0.8949999809265137
+                            }
+                        ],
+                        "metadata": {},
+                        "name": "alumnos",
+                        "type": "PERSON",
+                        "sentiment": null
+                    },
+                    {
+                        "mentions": [
+                            {
+                                "text": {
+                                    "content": "asignatura",
+                                    "beginOffset": -1
+                                },
+                                "type": "COMMON",
+                                "sentiment": null,
+                                "probability": 0.8420000076293945
+                            }
+                        ],
+                        "metadata": {},
+                        "name": "asignatura",
+                        "type": "OTHER",
+                        "sentiment": null
+                    },
+                    {
+                        "mentions": [
+                            {
+                                "text": {
+                                    "content": "todos",
+                                    "beginOffset": -1
+                                },
+                                "type": "COMMON",
+                                "sentiment": null,
+                                "probability": 0.859000027179718
+                            }
+                        ],
+                        "metadata": {},
+                        "name": "todos",
+                        "type": "PERSON",
+                        "sentiment": null
+                    }
+                ],
+                "languageCode": "es",
+                "languageSupported": true
+            },
+            "Categories": {
+                "categories": [
+                    {
+                        "name": "/Science/Computer Science/Machine Learning & Artificial Intelligence",
+                        "confidence": 0.3232879340648651
+                    },
+                    {
+                        "name": "/Reference/Language Resources/Foreign Language Resources",
+                        "confidence": 0.21271079778671265
+                    },
+                    {
+                        "name": "/Reference/General Reference/Educational Resources",
+                        "confidence": 0.1668519675731659
+                    }
+                ],
+                "languageCode": "es",
+                "languageSupported": true
+            },
+            "Moderation": {
+                "moderationCategories": [
+                    {
+                        "name": "Toxic",
+                        "confidence": 0.056243885308504105
+                    },
+                    {
+                        "name": "Insult",
+                        "confidence": 0.05293005704879761
+                    },
+                    {
+                        "name": "Profanity",
+                        "confidence": 0.023985227569937706
+                    },
+                    {
+                        "name": "Derogatory",
+                        "confidence": 0.004792527295649052
+                    },
+                    {
+                        "name": "Sexual",
+                        "confidence": 0.0029740394093096256
+                    },
+                    {
+                        "name": "Death, Harm & Tragedy",
+                        "confidence": 0.05970149114727974
+                    },
+                    {
+                        "name": "Violent",
+                        "confidence": 0.05284553021192551
+                    },
+                    {
+                        "name": "Firearms & Weapons",
+                        "confidence": 0.0181818176060915
+                    },
+                    {
+                        "name": "Public Safety",
+                        "confidence": 0.02056807093322277
+                    },
+                    {
+                        "name": "Health",
+                        "confidence": 0.1031307578086853
+                    },
+                    {
+                        "name": "Religion & Belief",
+                        "confidence": 0.10110294073820114
+                    },
+                    {
+                        "name": "Illicit Drugs",
+                        "confidence": 0.03658536449074745
+                    },
+                    {
+                        "name": "War & Conflict",
+                        "confidence": 0.010416666977107525
+                    },
+                    {
+                        "name": "Politics",
+                        "confidence": 0.09366390854120255
+                    },
+                    {
+                        "name": "Finance",
+                        "confidence": 0.10169491171836853
+                    },
+                    {
+                        "name": "Legal",
+                        "confidence": 0.0317460335791111
+                    }
+                ],
+                "languageCode": "es",
+                "languageSupported": true
+            }
+        };
+
+        // Función para mostrar datos de sentimiento y oraciones
+        function showSentiment(sentiment) {
+            const { documentSentiment, sentences } = sentiment;
+            const { magnitude, score } = documentSentiment;
+
+            const sentimentDiv = document.createElement('div');
+            sentimentDiv.classList.add('sentiment');
+
+            sentimentDiv.innerHTML = `
+                <h2>Sentiment</h2>
+                <p class="magnitude">Magnitude: ${magnitude}</p>
+                <p class="score">Score: ${score}</p>
+            `;
+
+            document.body.appendChild(sentimentDiv);
+
+            // Iterar sobre las oraciones y mostrarlas
+            sentences.forEach((sentence) => {
+                const { text, sentiment } = sentence;
+                const { magnitude, score } = sentiment;
+
+                const sentenceDiv = document.createElement('div');
+                sentenceDiv.classList.add('sentence');
+
+                sentenceDiv.innerHTML = `
+                    <p><strong>${text.content}</strong></p>
+                    <p class="magnitude">Magnitude: ${magnitude}</p>
+                    <p class="score">Score: ${score}</p>
+                `;
+
+                document.body.appendChild(sentenceDiv);
+            });
+        }
+
+        // Función para mostrar datos de entidades
+        function showEntities(entities) {
+            const entitiesDiv = document.createElement('div');
+            entitiesDiv.classList.add('entities');
+            entitiesDiv.innerHTML = '<h2>Entities</h2><ul>';
+
+            entities.forEach((entity) => {
+                // Accede a la palabra de la entidad (si hay menciones)
+                const word = entity.mentions.length > 0 ? entity.mentions[0].text.content : '';
+                entitiesDiv.innerHTML += `<li>${entity.type} - Word: ${word}</li>`;
+            });
+
+            entitiesDiv.innerHTML += '</ul>';
+            document.body.appendChild(entitiesDiv);
+        }
+
+        // Función para mostrar datos de categorías
+        function showCategories(categories) {
+            const categoriesDiv = document.createElement('div');
+            categoriesDiv.classList.add('categories');
+            categoriesDiv.innerHTML = '<h2>Categories</h2><ul>';
+
+            categories.forEach((category) => {
+                categoriesDiv.innerHTML += `<li>${category.name} - Confidence: ${category.confidence * 100}%</li>`;
+            });
+
+            categoriesDiv.innerHTML += '</ul>';
+            document.body.appendChild(categoriesDiv);
+        }
+
+        // Función para mostrar datos de moderación
+        function showModeration(moderationCategories) {
+            const moderationDiv = document.createElement('div');
+            moderationDiv.classList.add('moderation');
+            moderationDiv.innerHTML = '<h2>Moderation</h2><ul>';
+
+            moderationCategories.forEach((category) => {
+                moderationDiv.innerHTML += `<li>${category.name} - Confidence: ${category.confidence * 100}%</li>`;
+            });
+
+            moderationDiv.innerHTML += '</ul>';
+            document.body.appendChild(moderationDiv);
+        }
+
+        // Mostrar datos en la página
+        showSentiment(jsonData.Sentiment);
+        showEntities(jsonData.Entities.entities);
+        showCategories(jsonData.Categories.categories);
+        showModeration(jsonData.Moderation.moderationCategories);
+    </script>
+</body>
+
+</html>

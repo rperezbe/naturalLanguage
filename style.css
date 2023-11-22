@@ -1,0 +1,26 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+.sentence {
+    margin-bottom: 20px;
+}
+
+.magnitude {
+    font-weight: bold;
+}
+
+.score {
+    font-style: italic;
+}
+
+.entities,
+.categories,
+.moderation {
+    margin-top: 20px;
+}

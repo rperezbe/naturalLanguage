@@ -7,12 +7,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sentiment Analysis</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            background-color: #f1f1f1;
+            cursor: pointer;
+            border: 1px solid #ccc;
+        }
+
+        .tab:hover {
+            background-color: #ddd;
+        }
+
+        .tabcontent {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Natural language Demo</h1>
+    <h1>Natural Language Demo</h1>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <div class="tab" onclick="openTab(event, 'entities')">Entities</div>
+        <div class="tab" onclick="openTab(event, 'sentiment')">Sentiment</div>
+        <div class="tab" onclick="openTab(event, 'categories')">Categories</div>
+        <div class="tab" onclick="openTab(event, 'moderation')">Moderation</div>
+    </div>
+
+    <!-- Entity Tab Content -->
+    <div id="entities" class="tabcontent"></div>
+
+    <!-- Sentiment Tab Content -->
+    <div id="sentiment" class="tabcontent"></div>
+
+    <!-- Categories Tab Content -->
+    <div id="categories" class="tabcontent"></div>
+
+    <!-- Moderation Tab Content -->
+    <div id="moderation" class="tabcontent"></div>
+
     <script>
-        // Simula un objeto JSON variable
         const jsonData = {
             "Sentiment": {
                 "sentences": [
@@ -235,90 +284,80 @@
             }
         };
 
-        // Función para mostrar datos de sentimiento y oraciones
+        function openTab(evt, tabName) {
+            const tabcontents = document.querySelectorAll('.tabcontent');
+            tabcontents.forEach(content => content.style.display = 'none');
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            const selectedTab = document.getElementById(tabName);
+            selectedTab.style.display = 'block';
+
+            evt.currentTarget.classList.add('active');
+
+            switch (tabName) {
+                case 'entities':
+                    showEntities(jsonData.Entities.entities);
+                    break;
+                case 'sentiment':
+                    showSentiment(jsonData.Sentiment);
+                    break;
+                case 'categories':
+                    showCategories(jsonData.Categories.categories);
+                    break;
+                case 'moderation':
+                    showModeration(jsonData.Moderation.moderationCategories);
+                    break;
+                default:
+                    break;
+            }
+        }
         function showSentiment(sentiment) {
-            const { documentSentiment, sentences } = sentiment;
-            const { magnitude, score } = documentSentiment;
+            const sentimentDiv = document.getElementById('sentiment');
+            sentimentDiv.innerHTML = `<h2>Sentiment</h2><p>Magnitude: ${sentiment.documentSentiment.magnitude}</p><p>Score: ${sentiment.documentSentiment.score}</p>`;
 
-            const sentimentDiv = document.createElement('div');
-            sentimentDiv.classList.add('sentence');
-
-            sentimentDiv.innerHTML = `
-                <h2>Sentiment</h2>
-                <p><strong>Entire document</strong></p>
-                <p class="magnitude">Magnitude: ${magnitude}</p>
-                <p class="score">Score: ${score}</p>
-            `;
-
-            document.body.appendChild(sentimentDiv);
-
-            // Iterar sobre las oraciones y mostrarlas
-            sentences.forEach((sentence) => {
-                const { text, sentiment } = sentence;
-                const { magnitude, score } = sentiment;
-
-                const sentenceDiv = document.createElement('div');
-                sentenceDiv.classList.add('sentiment');
-
-                sentenceDiv.innerHTML = `
-                    <p><strong>${text.content}</strong></p>
-                    <p class="magnitude">Magnitude: ${magnitude}</p>
-                    <p class="score">Score: ${score}</p>
-                `;
-
-                document.body.appendChild(sentenceDiv);
+            sentiment.sentences.forEach(sentence => {
+                sentimentDiv.innerHTML += `<p>${sentence.text.content} - Magnitude: ${sentence.sentiment.magnitude} - Score: ${sentence.sentiment.score}</p>`;
             });
         }
 
-        // Función para mostrar datos de entidades
         function showEntities(entities) {
-            const entitiesDiv = document.createElement('div');
-            entitiesDiv.classList.add('entities');
+            const entitiesDiv = document.getElementById('entities');
             entitiesDiv.innerHTML = '<h2>Entities</h2><ul>';
 
-            entities.forEach((entity) => {
-                // Accede a la palabra de la entidad (si hay menciones)
+            entities.forEach(entity => {
                 const word = entity.mentions.length > 0 ? entity.mentions[0].text.content : '';
                 entitiesDiv.innerHTML += `<li>${entity.type} - Word: ${word}</li>`;
             });
 
             entitiesDiv.innerHTML += '</ul>';
-            document.body.appendChild(entitiesDiv);
         }
 
-        // Función para mostrar datos de categorías
         function showCategories(categories) {
-            const categoriesDiv = document.createElement('div');
-            categoriesDiv.classList.add('categories');
+            const categoriesDiv = document.getElementById('categories');
             categoriesDiv.innerHTML = '<h2>Categories</h2><ul>';
 
-            categories.forEach((category) => {
+            categories.forEach(category => {
                 categoriesDiv.innerHTML += `<li>${category.name} - Confidence: ${category.confidence * 100}%</li>`;
             });
 
             categoriesDiv.innerHTML += '</ul>';
-            document.body.appendChild(categoriesDiv);
         }
 
-        // Función para mostrar datos de moderación
         function showModeration(moderationCategories) {
-            const moderationDiv = document.createElement('div');
-            moderationDiv.classList.add('moderation');
+            const moderationDiv = document.getElementById('moderation');
             moderationDiv.innerHTML = '<h2>Moderation</h2><ul>';
 
-            moderationCategories.forEach((category) => {
+            moderationCategories.forEach(category => {
                 moderationDiv.innerHTML += `<li>${category.name} - Confidence: ${category.confidence * 100}%</li>`;
             });
 
             moderationDiv.innerHTML += '</ul>';
-            document.body.appendChild(moderationDiv);
         }
 
-        // Mostrar datos en la página
-        showSentiment(jsonData.Sentiment);
-        showEntities(jsonData.Entities.entities);
-        showCategories(jsonData.Categories.categories);
-        showModeration(jsonData.Moderation.moderationCategories);
+        // Inicialmente, al cargar la página, muestra la pestaña 'entities'
+        openTab(event, 'entities');
     </script>
 </body>
 

@@ -241,10 +241,11 @@
             const { magnitude, score } = documentSentiment;
 
             const sentimentDiv = document.createElement('div');
-            sentimentDiv.classList.add('sentiment');
+            sentimentDiv.classList.add('sentence');
 
             sentimentDiv.innerHTML = `
                 <h2>Sentiment</h2>
+                <p><strong>Entire document</strong></p>
                 <p class="magnitude">Magnitude: ${magnitude}</p>
                 <p class="score">Score: ${score}</p>
             `;
@@ -257,7 +258,7 @@
                 const { magnitude, score } = sentiment;
 
                 const sentenceDiv = document.createElement('div');
-                sentenceDiv.classList.add('sentence');
+                sentenceDiv.classList.add('sentiment');
 
                 sentenceDiv.innerHTML = `
                     <p><strong>${text.content}</strong></p>

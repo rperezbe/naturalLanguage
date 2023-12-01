@@ -284,6 +284,7 @@
                     break;
             }
         }
+        // Función para mostrar el sentiment analysis
         function showSentiment(sentiment) {
             const sentimentDiv = document.getElementById('sentiment');
             sentimentDiv.innerHTML = `<h2>Document and Sentence Level Sentiment</h2>`;
@@ -294,6 +295,7 @@
             entireDocumentDiv.innerHTML = `<p class="sentence"><b>ENTIRE DOCUMENT</b></p><div class="score" style="background-color: ${getBackgroundColor(sentiment.documentSentiment.score)};">Score:<br> ${sentiment.documentSentiment.score.toFixed(2)}</div><div class="magnitude">Magnitude: <br> ${sentiment.documentSentiment.magnitude.toFixed(2)}</div>`;
             sentimentDiv.appendChild(entireDocumentDiv);
 
+            // Mostrar el análisis de cada oración
             sentiment.sentences.forEach((sentence) => {
                 const { text, sentiment } = sentence;
                 const { magnitude, score } = sentiment;
@@ -308,8 +310,9 @@
                 sentimentDiv.appendChild(sentenceDiv);
             });
 
+            // Agregar una separacion de 20px entre el analsis y la leyenda
             const separationDiv = document.createElement('div');
-            separationDiv.style.height = '20px'; // Puedes ajustar la altura según tu preferencia
+            separationDiv.style.height = '20px'; 
             sentimentDiv.appendChild(separationDiv);
 
             // Agregar la leyenda al final
@@ -338,6 +341,7 @@
         }
         const entities = jsonData.Entities.entities;
 
+        // Función para obtener un color aleatorio
         function getRandomColor() {
             const letters = 'ABCDEF';
             let color = '#';
@@ -349,13 +353,15 @@
             return color;
         }
 
+        // Función para asignar colores a las entidades del documento
         function assignEntityColors(entities) {
             const entityColors = {};
 
             entities.forEach(entity => {
                 const entityType = entity.type.toLowerCase();
 
-                // Asignar un color aleatorio si aún no tiene uno asignado
+                // Si no existe un color asignado para la entidad, asigna uno aleatorio
+                // Si la entidad es de tipo 'other', no asigna un color sera gris
                 if (!entityColors[entityType] && entityType !== 'other') {
                     entityColors[entityType] = getRandomColor();
                 }
@@ -364,6 +370,7 @@
             return entityColors;
         }
 
+        // Función para mostrar el entity analysis
         function showEntities(entities) {
             const entityColors = assignEntityColors(entities);
             const entitiesDiv = document.getElementById('entities');
@@ -375,6 +382,7 @@
 
                 const entityItem = document.createElement('div');
                 entityItem.classList.add('entity-item', entityType);
+                //asigna el color de fondo según el tipo de entidad
                 entityItem.style.backgroundColor = entityColors[entityType];
                 entityItem.innerHTML = `<p>${entity.type} - Word: ${word}</p>`;
 
@@ -392,7 +400,7 @@
             });
         }
 
-
+        // Función para mostrar el moderation analysis
         function showModeration(moderationCategories) {
             const moderationDiv = document.getElementById('moderation');
             moderationDiv.innerHTML = '<h2>Moderation Analysis</h2>';
@@ -416,6 +424,7 @@
             });
         }
 
+        // Función para mostrar el category analysis
         function showCategories(categories) {
             const categoriesDiv = document.getElementById('categories');
             categoriesDiv.innerHTML = '<h2>Category Analysis</h2>';

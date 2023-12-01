@@ -1,26 +1,118 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+    font-family: 'Arial', sans-serif;
+    color: #616161;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
 }
 
 h1 {
-    color: #333;
+    color: #4285f4;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.tabs {
+    display: flex;
+    background-color: #4285f4;
+}
+
+.tab {
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    color: white;
+}
+
+.tab:hover {
+    background-color: #3c77d1;
+}
+
+.tabcontent {
+    display: none;
+    padding: 20px;
+    background-color: white;
+}
+
+.entities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.entity-row {
+    display: flex;
+    width: 100%;
+}
+
+.entity-item {
+    box-sizing: border-box;
+    width:50%;
+    margin: 5px;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 0 5px 0 rgba(0,0,0,0.2);
+}
+
+
+.entity-item.other {
+   background-color: #cccccc; /* Color para el tipo 'other' */
+}
+
+.sentiment-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.score,
+.magnitude {
+    padding: 5px;
+    color: white;
 }
 
 .sentence {
-    margin-bottom: 20px;
+    width: 90%;
+}
+
+.score, .magnitude {
+    width: 110px;
+    text-align: center;
 }
 
 .magnitude {
-    font-weight: bold;
+    background-color: #29b6f6;
 }
 
-.score {
-    font-style: italic;
+.moderation,
+.categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
-.entities,
-.categories,
-.moderation {
-    margin-top: 20px;
+.moderation-row,
+.category-row {
+    display: flex;
+    width: 100%;
+}
+
+.moderation-item,
+.category-item {
+    box-sizing: border-box;
+    width: 50%;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.moderation-item:nth-child(even),
+.category-item:nth-child(even) {
+    background-color: #f7f7f7; /* Cambia el color de fondo para los elementos pares */
 }

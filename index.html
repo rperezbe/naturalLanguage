@@ -7,35 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sentiment Analysis</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        .tabs {
-            display: flex;
-            margin-bottom: 10px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            background-color: #f1f1f1;
-            cursor: pointer;
-            border: 1px solid #ccc;
-        }
-
-        .tab:hover {
-            background-color: #ddd;
-        }
-
-        .tabcontent {
-            display: none;
-        }
-    </style>
 </head>
 
 <body>
@@ -45,8 +16,8 @@
     <div class="tabs">
         <div class="tab" onclick="openTab(event, 'entities')">Entities</div>
         <div class="tab" onclick="openTab(event, 'sentiment')">Sentiment</div>
-        <div class="tab" onclick="openTab(event, 'categories')">Categories</div>
         <div class="tab" onclick="openTab(event, 'moderation')">Moderation</div>
+        <div class="tab" onclick="openTab(event, 'categories')">Categories</div>
     </div>
 
     <!-- Entity Tab Content -->
@@ -315,46 +286,159 @@
         }
         function showSentiment(sentiment) {
             const sentimentDiv = document.getElementById('sentiment');
-            sentimentDiv.innerHTML = `<h2>Sentiment</h2><p>Magnitude: ${sentiment.documentSentiment.magnitude}</p><p>Score: ${sentiment.documentSentiment.score}</p>`;
+            sentimentDiv.innerHTML = `<h2>Document and Sentence Level Sentiment</h2>`;
 
-            sentiment.sentences.forEach(sentence => {
-                sentimentDiv.innerHTML += `<p>${sentence.text.content} - Magnitude: ${sentence.sentiment.magnitude} - Score: ${sentence.sentiment.score}</p>`;
+            // Mostrar la fila de ENTIRE DOCUMENT
+            const entireDocumentDiv = document.createElement('div');
+            entireDocumentDiv.classList.add('sentiment-row');
+            entireDocumentDiv.innerHTML = `<p class="sentence"><b>ENTIRE DOCUMENT</b></p><div class="score" style="background-color: ${getBackgroundColor(sentiment.documentSentiment.score)};">Score:<br> ${sentiment.documentSentiment.score.toFixed(2)}</div><div class="magnitude">Magnitude: <br> ${sentiment.documentSentiment.magnitude.toFixed(2)}</div>`;
+            sentimentDiv.appendChild(entireDocumentDiv);
+
+            sentiment.sentences.forEach((sentence) => {
+                const { text, sentiment } = sentence;
+                const { magnitude, score } = sentiment;
+
+                const sentenceDiv = document.createElement('div');
+                sentenceDiv.classList.add('sentiment-row');
+                sentenceDiv.innerHTML = `
+            <p class="sentence">${text.content}</p>
+            <div class="score" style="background-color: ${getBackgroundColor(score)};">Score:<br> ${score.toFixed(2)}</div>
+            <div class="magnitude">Magnitude:<br> ${magnitude.toFixed(2)}</div>
+        `;
+                sentimentDiv.appendChild(sentenceDiv);
             });
+
+            const separationDiv = document.createElement('div');
+            separationDiv.style.height = '20px'; // Puedes ajustar la altura según tu preferencia
+            sentimentDiv.appendChild(separationDiv);
+
+            // Agregar la leyenda al final
+            const legendDiv = document.createElement('div');
+            legendDiv.classList.add('sentiment-row');
+            legendDiv.setAttribute('title', 'Score of the sentiment ranges from -1.0 (very negative) to 1.0 (very positive).');
+            legendDiv.innerHTML = `
+        <p class="sentence"><b>Score Range</b></p>
+        <div class="score" style="background-color: #388e3c;">0.25 <span>—</span> 1.0</div>
+        <div class="score" style="background-color: #f7cb4d;">-0.25 <span>—</span> 0.25</div>
+        <div class="score" style="background-color: #e53935;">-1.0 <span>—</span> -0.25</div>
+    `;
+
+            sentimentDiv.appendChild(legendDiv);
+        }
+
+        // Función para obtener el color de fondo según el valor del score
+        function getBackgroundColor(score) {
+            if (score >= 0.25) {
+                return "#388e3c"; // Verde
+            } else if (score >= -0.25) {
+                return '#f7cb4d'; // Amarillo
+            } else {
+                return '#e53935'; // Rojo
+            }
+        }
+        const entities = jsonData.Entities.entities;
+
+        function getRandomColor() {
+            const letters = 'ABCDEF';
+            let color = '#';
+
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * letters.length)];
+            }
+
+            return color;
+        }
+
+        function assignEntityColors(entities) {
+            const entityColors = {};
+
+            entities.forEach(entity => {
+                const entityType = entity.type.toLowerCase();
+
+                // Asignar un color aleatorio si aún no tiene uno asignado
+                if (!entityColors[entityType] && entityType !== 'other') {
+                    entityColors[entityType] = getRandomColor();
+                }
+            });
+
+            return entityColors;
         }
 
         function showEntities(entities) {
+            const entityColors = assignEntityColors(entities);
             const entitiesDiv = document.getElementById('entities');
-            entitiesDiv.innerHTML = '<h2>Entities</h2><ul>';
+            entitiesDiv.innerHTML = '<h2>Entities Analysis</h2>';
 
-            entities.forEach(entity => {
+            entities.forEach((entity, index) => {
                 const word = entity.mentions.length > 0 ? entity.mentions[0].text.content : '';
-                entitiesDiv.innerHTML += `<li>${entity.type} - Word: ${word}</li>`;
-            });
+                const entityType = entity.type.toLowerCase();
 
-            entitiesDiv.innerHTML += '</ul>';
+                const entityItem = document.createElement('div');
+                entityItem.classList.add('entity-item', entityType);
+                entityItem.style.backgroundColor = entityColors[entityType];
+                entityItem.innerHTML = `<p>${entity.type} - Word: ${word}</p>`;
+
+                if (index % 2 === 0) {
+                    // Si es un elemento par, crea una nueva fila
+                    const entityRow = document.createElement('div');
+                    entityRow.classList.add('entity-row');
+                    entitiesDiv.appendChild(entityRow);
+                }
+
+                // Agrega el elemento de entidad a la última fila
+                const entityRows = document.querySelectorAll('.entity-row');
+                const lastEntityRow = entityRows[entityRows.length - 1];
+                lastEntityRow.appendChild(entityItem);
+            });
+        }
+
+
+        function showModeration(moderationCategories) {
+            const moderationDiv = document.getElementById('moderation');
+            moderationDiv.innerHTML = '<h2>Moderation Analysis</h2>';
+
+            moderationCategories.forEach((category, index) => {
+                const moderationItem = document.createElement('div');
+                moderationItem.classList.add('moderation-item');
+                moderationItem.innerHTML = `<p><b>${category.name}</b> <br> <b>Confidence</b>: ${category.confidence * 100}%</p>`;
+
+                if (index % 2 === 0) {
+                    // Si es un elemento par, crea una nueva fila
+                    const moderationRow = document.createElement('div');
+                    moderationRow.classList.add('moderation-row');
+                    moderationDiv.appendChild(moderationRow);
+                }
+
+                // Agrega el elemento de moderación a la última fila
+                const moderationRows = document.querySelectorAll('.moderation-row');
+                const lastModerationRow = moderationRows[moderationRows.length - 1];
+                lastModerationRow.appendChild(moderationItem);
+            });
         }
 
         function showCategories(categories) {
             const categoriesDiv = document.getElementById('categories');
-            categoriesDiv.innerHTML = '<h2>Categories</h2><ul>';
+            categoriesDiv.innerHTML = '<h2>Category Analysis</h2>';
 
-            categories.forEach(category => {
-                categoriesDiv.innerHTML += `<li>${category.name} - Confidence: ${category.confidence * 100}%</li>`;
+            categories.forEach((category, index) => {
+                const categoryItem = document.createElement('div');
+                categoryItem.classList.add('category-item');
+                categoryItem.innerHTML = `<p><b>${category.name}</b> <br> <b>Confidence</b>: ${category.confidence * 100}%</p>`;
+
+                if (index % 2 === 0) {
+                    // Si es un elemento par, crea una nueva fila
+                    const categoryRow = document.createElement('div');
+                    categoryRow.classList.add('category-row');
+                    categoriesDiv.appendChild(categoryRow);
+                }
+
+                // Agrega el elemento de categoría a la última fila
+                const categoryRows = document.querySelectorAll('.category-row');
+                const lastCategoryRow = categoryRows[categoryRows.length - 1];
+                lastCategoryRow.appendChild(categoryItem);
             });
-
-            categoriesDiv.innerHTML += '</ul>';
         }
 
-        function showModeration(moderationCategories) {
-            const moderationDiv = document.getElementById('moderation');
-            moderationDiv.innerHTML = '<h2>Moderation</h2><ul>';
-
-            moderationCategories.forEach(category => {
-                moderationDiv.innerHTML += `<li>${category.name} - Confidence: ${category.confidence * 100}%</li>`;
-            });
-
-            moderationDiv.innerHTML += '</ul>';
-        }
 
         // Inicialmente, al cargar la página, muestra la pestaña 'entities'
         openTab(event, 'entities');
